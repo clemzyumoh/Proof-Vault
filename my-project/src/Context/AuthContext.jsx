@@ -20,29 +20,51 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true); // NEW
 
-    useEffect(() => {
-      const setupWallet = async () => {
-        if (user && !userHasWallet({ user, ethereum ,solana})) {
-          try {
-            // Create wallet for the user if it doesn't exist
-            await createWallet();
-            console.log("Wallet created successfully!");
-          } catch (err) {
-            console.error("Wallet creation failed:", err);
-            setError("Failed to create wallet.");
-          }
-        }
-      };
+    // useEffect(() => {
+    //   const setupWallet = async () => {
+    //     if (user && !userHasWallet({ user, ethereum ,solana})) {
+    //       try {
+    //         // Create wallet for the user if it doesn't exist
+    //         await createWallet();
+    //         console.log("Wallet created successfully!");
+    //       } catch (err) {
+    //         console.error("Wallet creation failed:", err);
+    //         setError("Failed to create wallet.");
+    //       }
+    //     }
+    //   };
 
-      setupWallet();
-    }, [user, ethereum, createWallet, solana]);
+    //   setupWallet();
+    // }, [user, ethereum, createWallet, solana]);
+useEffect(() => {
+  if (!user || !ethereum) return;
 
-    useEffect(() => {
+  const setupWallet = async () => {
+    const hasWallet = userHasWallet({ user, ethereum, solana });
+    if (!hasWallet) {
+      try {
+        await createWallet();
+        console.log("Wallet created successfully!");
+      } catch (err) {
+        console.error("Wallet creation failed:", err);
+        // optionally surface to UI
+      }
+    }
+  };
+
+  setupWallet();
+}, [user, ethereum, solana, createWallet]);
+
+  useEffect(() => {
+      console.log("userdeatils,", civicUser)
       if (civicUser) {
         //setUser(civicUser);
     
         setUser({
           name: civicUser.name,
+          email: civicUser.email,
+          picture: civicUser.picture,
+          _id: civicUser.id,
         
         });
       } else {
@@ -58,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{ user, setUser, isAuthenticated, signIn, signOut ,ethereum,createWallet, solana}}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

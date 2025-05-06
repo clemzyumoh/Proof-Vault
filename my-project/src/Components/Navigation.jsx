@@ -13,7 +13,7 @@ const Navigation = () => {
   const Menus = [
     { to: "/", label: "Home", icon: <IoHomeOutline className="text-2xl" /> },
     { to: "/upload", label: "Upload", icon: <HiOutlineUpload className="text-2xl" /> },
-    { to: "/view", label: "View", icon: <FaEye className="text-2xl" /> },
+    { to: "/view/:id", label: "View", icon: <FaEye className="text-2xl" /> },
     {
       to: "/settings",
       label: "Settings",

@@ -1,4 +1,5 @@
-const User = require("../models/User");
+//const User = require("../models/User");
+import User from "../models/User.js"
 
 const handleCivicLogin = async (req, res) => {
   try {
@@ -29,4 +30,4 @@ const handleCivicLogin = async (req, res) => {
   }
 };
 
-module.exports = { handleCivicLogin };
+export default  { handleCivicLogin };

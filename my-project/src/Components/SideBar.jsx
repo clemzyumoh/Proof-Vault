@@ -27,7 +27,7 @@ const Sidebar = () => {
         {[
           { to: "/", label: "Home", icon: <IoHomeOutline /> },
           { to: "/upload", label: "Upload", icon: <HiOutlineUpload /> },
-          { to: "/view", label: "View", icon: <FaEye /> },
+          { to: "/view/:id", label: "View", icon: <FaEye /> },
         ].map((item) => (
           <NavLink
             key={item.to}

@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+
 import img from "../assets/vault.png"
 //import { useUser, userHasWallet } from "@civic/auth-web3/react";
 
 const Login = () => {
   const { user, signIn } = useContext(AuthContext);
   const navigate = useNavigate();
-
   const [error, setError] = useState(null);
   const [manualLoginTriggered, setManualLoginTriggered] = useState(false);
   const [loading, setLoading] = useState(false);

@@ -234,7 +234,7 @@ const isLoginPage = location.pathname === "/login";
           />
 
           <Route
-            path="/view"
+            path="/view/:id"
             element={
               <ProtectedRoute>
                 <>

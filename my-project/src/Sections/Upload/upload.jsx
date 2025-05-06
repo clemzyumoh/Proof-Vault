@@ -1,61 +1,195 @@
-// pages/Upload.jsx
-import React, { useState } from "react";
+// import { useState } from "react";
+// import axios from "axios";
+// import { useAuth } from "../../Context/AuthContext";
+// import { useNavigate } from "react-router-dom";
+
+// export default function Upload() {
+//   const [file, setFile] = useState(null);
+//   const [loading, setLoading] = useState(false);
+//     const { ethereum, user} = useAuth();
+  
+
+//   const navigate = useNavigate();
+
+//   const handleUpload = async (e) => {
+//     e.preventDefault();
+//     if (!file) return;
+
+//     const formData = new FormData();
+//     formData.append("file", file);
+
+   
+//     try {
+//       setLoading(true);
+//       await axios.post(
+//         `${import.meta.env.VITE_API_URL}/docs/upload`,
+//         formData,
+//         {
+//           // headers: {
+//           //   Authorization: `Bearer ${token}`,
+//           //   "Content-Type": "multipart/form-data",
+//           // },
+//           headers: {
+//             "X-Wallet-Address": ethereum,
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
+//       );
+//       navigate("/");
+//     } catch (err) {
+//       console.error("Upload failed", err);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="p-6 mt-20">
+//       <h2 className="text-2xl font-semibold mb-4">Upload a Document</h2>
+//       <form onSubmit={handleUpload} className="space-y-4">
+//         <input
+//           type="file"
+//           onChange={(e) => setFile(e.target.files?.[0] || null)}
+//           className="border p-2"
+//           required
+//         />
+//         <button
+//           type="submit"
+//           disabled={loading}
+//           className="bg-purple-600 text-white px-4 py-2 rounded">
+//           {loading ? "Uploading..." : "Upload"}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// }
+
+import { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const Upload = () => {
+export default function Upload() {
   const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { ethereum, user } = useAuth(); // ensure user._id exists
+  const navigate = useNavigate();
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  // const handleUpload = async (e) => {
+  //   e.preventDefault();
+  //   if (!file || !user?._id || !ethereum) {
+  //     console.error("Missing file or user or wallet");
+  //     return;
+  //   }
 
-  const handleUpload = async () => {
-    if (!file) return;
+  //   setLoading(true);
 
-    try {
-      setUploading(true);
+  //   try {
+  //     // Step 1: Upload file to IPFS
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+  // formData.append("userId", user._id);
+  // formData.append("fileName", file.name);
 
-      // Get userId from localStorage (or replace with context if using context)
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (!user || !user._id) {
-        alert("User not logged in.");
-        return;
-      }
+  // formData.append("type", "Other");
+  // formData.append("size", file.size);
+  //     const ipfsRes = await axios.post(
+  //       `${import.meta.env.VITE_API_URL}/ipfs/upload`, // 👈 Make sure this endpoint exists
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("userId", user._id);
+  //     const { cid, ipfsHash } = ipfsRes.data;
 
-      const res = await axios.post("/api/docs/upload", formData, {
+  //     // Step 2: Upload document metadata to DB
+  //     await axios.post(`${import.meta.env.VITE_API_URL}/docs/upload`,     formData, ipfsRes,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           "x-wallet-address": ethereum,
+  //         },
+  //       });
+
+  //     navigate("/");
+  //   } catch (err) {
+  //     console.error("Upload failed", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+const handleUpload = async (e) => {
+  e.preventDefault();
+  if (!file || !user?._id || !ethereum) {
+    console.error("Missing file or user or wallet");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    // Step 1: Upload file to IPFS
+    const formData = new FormData();
+    formData.append("file", file);
+    const ipfsRes = await axios.post(
+      `${import.meta.env.VITE_API_URL}/ipfs/upload`,
+      formData,
+      {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      });
+      }
+    );
 
-      console.log("Uploaded:", res.data);
-      alert("Upload successful!");
-      setFile(null);
-    } catch (err) {
-      console.error("Upload failed:", err);
-      alert("Upload failed. Check console for details.");
-    } finally {
-      setUploading(false);
-    }
-  };
+    const { cid, ipfsHash } = ipfsRes.data;
+
+    // Step 2: Save document metadata to DB (DO NOT pass formData again)
+    const docPayload = {
+      userId: user._id,
+      fileName: file.name,
+      cid,
+      ipfsHash,
+      type: "Other",
+      size: file.size,
+    };
+console.log("Ethereum Wallet Address to be sent:", ethereum);
+    await axios.post(
+      `${import.meta.env.VITE_API_URL}/docs/upload`,
+      docPayload,
+      {
+        headers: {
+          "x-wallet-address": ethereum.address,
+        },
+      }
+    );
+
+    navigate("/");
+  } catch (err) {
+    console.error("Upload failed", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="p-6 mt-20">
-      <h1 className="text-2xl font-bold mb-4">Upload Document</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button
-        onClick={handleUpload}
-        disabled={!file || uploading}
-        className="ml-4 bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50">
-        {uploading ? "Uploading..." : "Upload"}
-      </button>
+      <h2 className="text-2xl font-semibold mb-4">Upload a Document</h2>
+      <form onSubmit={handleUpload} className="space-y-4">
+        <input
+          type="file"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+          className="border p-2"
+          required
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-purple-600 text-white px-4 py-2 rounded">
+          {loading ? "Uploading..." : "Upload"}
+        </button>
+      </form>
     </div>
   );
-};
-
-export default Upload;
+}

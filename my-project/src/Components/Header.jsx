@@ -144,7 +144,7 @@ const Header = ({ darkMode, setDarkMode }) => {
         <div className="flex items-center ">
           <div className="flex items-center justify-between ">
             <div className="flex items-center justify-center gap-2 ">
-              <p className=" text-sm  font-bold">{user.name}</p>
+              
               <div className="">
                 <select
                   className="bg-purple-600  border-none focus:outline-none text-[12px] focus:ring-0 text-white rounded p-1"

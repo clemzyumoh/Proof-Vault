@@ -1,37 +1,77 @@
-const express = require("express");
+
+// // //const express = require("express");
+// // import express from "express";
+// // const router = express.Router();
+// // //const multer = require("multer");
+// // import multer from "multer";
+// // const upload = multer();
+
+// // import {
+// //   uploadDocument,
+// //   getUserDocuments,
+// // } from "../controllers/documentController.js";
+// // import { verifyCivicJWT } from "../middleware/verifyCivicJWT.js";
+
+// // // Upload document (already exists)
+// // router.post("/upload", verifyCivicJWT, upload.single("file"), uploadDocument);
+
+// // // New: Fetch documents belonging to the authenticated user
+// // router.get("/", verifyCivicJWT, getUserDocuments);
+
+// // export default router;
+
+// import express from "express";
+// import multer from "multer";
+// import {
+//   uploadDocument,
+//   getUserDocuments,
+// } from "../controllers/documentController.js";
+// //import { verifyCivicJWT } from "../middleware/verifyCivicJWT.js";
+
+// const router = express.Router();
+// const upload = multer({
+//   limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
+// }); // Middleware to handle multipart/form-data (file uploads)
+
+// // @route   POST /api/documents/upload
+// // @desc    Upload a document (requires Civic auth)
+// // @access  Private
+// router.post("/upload",  upload.single("file"), uploadDocument);
+
+// // @route   GET /api/documents/
+// // @desc    Get all documents for authenticated user
+// // @access  Private
+// router.get("/",  getUserDocuments);
+
+// export default router;
+
+
+import express from "express";
+import multer from "multer";
+import {
+  uploadDocument,
+  getUserDocuments,
+  getDocumentById,
+} from "../controllers/documentController.js";
+
 const router = express.Router();
-const multer = require("multer");
-const upload = multer();
+const upload = multer({
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
+});
 
-const { uploadDocument } = require("../controllers/documentController");
-
+// @route   POST /api/documents/upload
+// @desc    Upload a document (requires wallet address)
+// @access  Private
 router.post("/upload", upload.single("file"), uploadDocument);
 
-module.exports = router;
+// @route   GET /api/documents/
+// @desc    Get all documents for authenticated user using wallet address
+// @access  Private
+router.get("/", getUserDocuments);
 
-// import express from "express";
-// import { verifyToken } from "../middleware/authMiddleware.js";
 
-// const router = express.Router();
 
-// router.get("/", verifyToken, async (req, res) => {
-//   // now you can use req.user to get the logged in user info
-//   const userWallet = req.user.wallet;
-//   // Fetch documents for userWallet...
-//   res.json({ message: `Documents for ${userWallet}` });
-// });
 
-// export default router;
+router.get("/:id", getDocumentById);
 
-// import express from "express";
-// import { verifyCivicJWT } from "../middleware/verifyCivicJWT.js";
-
-// const router = express.Router();
-
-// // Protect this route using the Civic JWT middleware
-// router.get("/docs", verifyCivicJWT, (req, res) => {
-//   const wallet = req.user.sub; // `sub` holds the wallet address in Civic's JWT
-//   res.json({ message: `Docs for wallet: ${wallet}` });
-// });
-
-// export default router;
+export default router;
