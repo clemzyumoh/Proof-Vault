@@ -23,17 +23,20 @@ import { CivicAuthProvider } from "@civic/auth-web3/react"; // Import CivicAuthP
 import { AuthProvider } from "./Context/AuthContext.jsx";
 import App from "./App.jsx";
 import "./index.css";
+import { DocumentProvider } from "./Context/DocumentContext.jsx";
+
 
 // Make sure to wrap with CivicAuthProvider here
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <CivicAuthProvider clientId={import.meta.env.VITE_CIVIC_CLIENT_ID}>
-      
-      <BrowserRouter>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </BrowserRouter>
+      <DocumentProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </BrowserRouter>
+      </DocumentProvider>
     </CivicAuthProvider>
   </StrictMode>
 );

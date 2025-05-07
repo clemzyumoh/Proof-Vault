@@ -1,68 +1,4 @@
-// import { useState } from "react";
-// import axios from "axios";
-// import { useAuth } from "../../Context/AuthContext";
-// import { useNavigate } from "react-router-dom";
 
-// export default function Upload() {
-//   const [file, setFile] = useState(null);
-//   const [loading, setLoading] = useState(false);
-//     const { ethereum, user} = useAuth();
-  
-
-//   const navigate = useNavigate();
-
-//   const handleUpload = async (e) => {
-//     e.preventDefault();
-//     if (!file) return;
-
-//     const formData = new FormData();
-//     formData.append("file", file);
-
-   
-//     try {
-//       setLoading(true);
-//       await axios.post(
-//         `${import.meta.env.VITE_API_URL}/docs/upload`,
-//         formData,
-//         {
-//           // headers: {
-//           //   Authorization: `Bearer ${token}`,
-//           //   "Content-Type": "multipart/form-data",
-//           // },
-//           headers: {
-//             "X-Wallet-Address": ethereum,
-//             "Content-Type": "multipart/form-data",
-//           },
-//         }
-//       );
-//       navigate("/");
-//     } catch (err) {
-//       console.error("Upload failed", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="p-6 mt-20">
-//       <h2 className="text-2xl font-semibold mb-4">Upload a Document</h2>
-//       <form onSubmit={handleUpload} className="space-y-4">
-//         <input
-//           type="file"
-//           onChange={(e) => setFile(e.target.files?.[0] || null)}
-//           className="border p-2"
-//           required
-//         />
-//         <button
-//           type="submit"
-//           disabled={loading}
-//           className="bg-purple-600 text-white px-4 py-2 rounded">
-//           {loading ? "Uploading..." : "Upload"}
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
 
 import { useState } from "react";
 import axios from "axios";
@@ -174,15 +110,20 @@ console.log("Ethereum Wallet Address to be sent:", ethereum);
 };
 
   return (
-    <div className="p-6 mt-20">
+    <div className="p-6 mt-20 lg:mt-32">
       <h2 className="text-2xl font-semibold mb-4">Upload a Document</h2>
       <form onSubmit={handleUpload} className="space-y-4">
-        <input
-          type="file"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="border p-2"
-          required
-        />
+       
+        <label className="border p-2 cursor-pointer lg:w-[40vw] rounded-2xl block">
+          {file ? file.name : "Select a file"}
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            className="hidden"
+            required
+          />
+        </label>
+
         <button
           type="submit"
           disabled={loading}

@@ -10,44 +10,6 @@ dotenv.config();
 
 
 
-// const uploadDocument = async (req, res) => {
-//   try {
-//     const { userId, fileName, cid, ipfsHash, type = "Other", size } = req.body;
-
-//    const walletAddressRaw = req.headers["x-wallet-address"];
-//    let walletAddress = walletAddressRaw;
-
-//    try {
-//      // Try parsing if it's a stringified object
-//      walletAddress = JSON.parse(walletAddressRaw).address || walletAddressRaw;
-//    } catch (err) {
-//      // If parsing fails, assume it's already a string
-//      console.error("Parsing wallet address failed:", err);
-//    }
-
-//    console.log("Final walletAddress:", walletAddress);
-
-//     if (!walletAddress || !cid || !fileName || !userId) {
-//       return res.status(400).json({ error: "Missing required fields" });
-//     }
-
-//     const newDoc = await Document.create({
-//       walletAddress:walletAddress,
-//       fileName,
-//       cid,
-//       ipfsHash,
-//       userId,
-//       type,
-//       size,
-//     });
-
-//     res.status(201).json({ message: "Document uploaded", document: newDoc });
-//   } catch (error) {
-//     console.error("Upload error:", error);
-//     res.status(500).json({ error: "Failed to upload document" });
-//   }
-// };
-
 const uploadDocument = async (req, res) => {
   try {
     const { userId, fileName, cid, ipfsHash, type = "Other", size } = req.body;
@@ -168,24 +130,74 @@ const getDocumentById = (req, res) => {
     .catch((err) => res.status(500).send({ message: 'Server Error', error: err }));
 };
 
+// const deleteDocument = async (req, res) => {
+//   const { id } = req.params; // Get the document ID from the URL
+//   //const walletAddress = req.headers["X-Wallet-Address"]; // Get wallet address from header
+//   const walletAddressRaw = req.headers["x-wallet-address"];
+//   let walletAddress = walletAddressRaw;
+
+//   try {
+//     // Handle if mistakenly passed as object
+//     walletAddress = JSON.parse(walletAddressRaw).address || walletAddressRaw;
+//   } catch (err) {
+//     // It's fine if already a string
+//   }
+//   try {
+//     const document = await Document.findById(id);
+//     if (!document) {
+//       return res.status(404).json({ error: "Document not found" });
+//     }
+
+//     // Check if the user is the owner of the document
+//     if (document.walletAddress !== walletAddress) {
+//       return res
+//         .status(403)
+//         .json({ error: "You don't have permission to delete this document" });
+//     }
+
+//     await document.remove(); // Delete the document from the database
+//     res.status(200).json({ message: "Document deleted successfully" });
+//   } catch (err) {
+//     console.error("Error deleting document:", err);
+//     res.status(500).json({ error: "Failed to delete document" });
+//   }
+// };
+
 const deleteDocument = async (req, res) => {
-  const { id } = req.params; // Get the document ID from the URL
-  const walletAddress = req.headers["X-Wallet-Address"]; // Get wallet address from header
+  const { id } = req.params;
+  //const walletAddress = req.headers["x-wallet-address"]; // lowercase header key just in case
+const walletAddressRaw = req.headers["x-wallet-address"];
+let walletAddress = walletAddressRaw;
+
+try {
+  // Handle if mistakenly passed as object
+  walletAddress = JSON.parse(walletAddressRaw).address || walletAddressRaw;
+} catch (err) {
+  // It's fine if already a string
+}
+  console.log("Delete request for ID:", id);
+  console.log("Wallet address from header:", walletAddress);
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "Invalid document ID" });
+  }
 
   try {
     const document = await Document.findById(id);
     if (!document) {
+      console.log("Document not found in DB.");
       return res.status(404).json({ error: "Document not found" });
     }
 
-    // Check if the user is the owner of the document
-    if (document.walletAddress !== walletAddress) {
-      return res
-        .status(403)
-        .json({ error: "You don't have permission to delete this document" });
+    console.log("Found document wallet:", document.walletAddress);
+
+    if (document.walletAddress.toLowerCase() !== walletAddress.toLowerCase()) {
+      return res.status(403).json({ error: "Unauthorized: Wallet mismatch" });
     }
 
-    await document.remove(); // Delete the document from the database
+    //await document.remove();
+    await document.deleteOne(); // ✅ This works
+
     res.status(200).json({ message: "Document deleted successfully" });
   } catch (err) {
     console.error("Error deleting document:", err);

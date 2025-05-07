@@ -60,9 +60,14 @@ const app = express();
 //app.use(cors());
 app.use(
   cors({
-    allowedHeaders: ["Content-Type", "Authorization", "x-wallet-address"], // Allow custom headers
+    allowedHeaders: ["Content-Type", "Authorization", "x-wallet-address"],
+    // Allow custom
+    origin: "https://proof-vault.vercel.app/", // replace with actual domain
+    credentials: true,
   })
 );
+
+
 
 // Middleware
 //app.use(cors());

@@ -12,11 +12,11 @@ const Login = () => {
   const [manualLoginTriggered, setManualLoginTriggered] = useState(false);
   const [loading, setLoading] = useState(false);
  
-  useEffect(() => {
-    if (user && manualLoginTriggered) {
-      navigate("/");
-    }
-  }, [user, navigate, manualLoginTriggered]);
+  // useEffect(() => {
+  //   if (user && manualLoginTriggered) {
+  //     //navigate("/");
+  //   }
+  // }, [user, navigate, manualLoginTriggered]);
 
   const handleLogin = async () => {
     setManualLoginTriggered(true);
@@ -24,7 +24,7 @@ const Login = () => {
     try {
         await signIn();
          
-           //navigate("/");
+           navigate("/");
       // navigation will happen in useEffect
     } catch (err) {
       console.error("Login failed:", err);

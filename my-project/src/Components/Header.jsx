@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import {
   FaSearch,
   FaUser,
-  FaBars,
-  FaTimes,
+ 
   FaBell,
   FaCog,
   FaSignOutAlt,
@@ -41,7 +40,7 @@ const Header = ({ darkMode, setDarkMode }) => {
      `${address.slice(0, 3)}...${address.slice(-3)}`;
 
   return (
-    <motion.div className="fixed top-0 w-full lg:w-[80vw] lg:dark:bg-black md:px-14  flex justify-between items-center p-4 z-40 text-black dark:text-white  bg-white dark:bg-gray-800">
+    <motion.div className="fixed top-0 w-full lg:w-[80vw] lg:dark:bg-black md:px-14 bg-neutral-200  flex justify-between items-center p-4 z-40 text-black dark:text-white  lg:bg-white dark:bg-gray-800">
       {/* 🔹 Laptop Layout */}
       <div className="hidden lg:flex items-center justify-around w-full">
         {/* Logo / Title */}

@@ -55,23 +55,37 @@ useEffect(() => {
   setupWallet();
 }, [user, ethereum, solana, createWallet]);
 
-  useEffect(() => {
-      console.log("userdeatils,", civicUser)
-      if (civicUser) {
-        //setUser(civicUser);
+  // useEffect(() => {
+  //     console.log("userdeatils,", civicUser)
+  //     if (civicUser) {
+  //       //setUser(civicUser);
     
-        setUser({
-          name: civicUser.name,
-          email: civicUser.email,
-          picture: civicUser.picture,
-          _id: civicUser.id,
+  //       setUser({
+  //         name: civicUser.name,
+  //         email: civicUser.email,
+  //         picture: civicUser.picture,
+  //         _id: civicUser.id,
         
-        });
-      } else {
-        setUser(null);
-      }
-      setLoading(false); // done checking user status
-    }, [civicUser]);
+  //       });
+  //     } else {
+  //       setUser(null);
+  //     }
+  //     setLoading(false); // done checking user status
+  //   }, [civicUser]);
+useEffect(() => {
+  if (civicUser) {
+    setUser({
+      name: civicUser.name,
+      email: civicUser.email,
+      picture: civicUser.picture,
+      _id: civicUser.id,
+    });
+    setLoading(false); // ✅ Only mark loading as done after setting user
+  } else {
+    setUser(null);
+    setLoading(false); // Optional: mark as done even if user is null
+  }
+}, [civicUser]);
 
 
 
