@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+import AnimatedText from "./AnimationText";
 
 import img from "../assets/vault.png"
 //import { useUser, userHasWallet } from "@civic/auth-web3/react";
@@ -61,21 +62,7 @@ const Login = () => {
             <br /> securely and privately
           </p>
         </div>
-        {/* {loading ? (
-          <p>Connecting to Civic...</p>
-        ) : (
-          // <button
-          //   onClick={handleLogin}
-          //   className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl">
-          //   Log In with Civic
-          // </button>
-          // <button
-          //   onClick={handleLogin}
-          //   className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl"
-          //   disabled={loading}>
-          //   {loading ? "Connecting to Civic..." : "Log In with Civic"}
-          //   </button>
-       */}
+     
         {!hasClickedLogin ? (
           <button
             onClick={handleLogin}
@@ -83,7 +70,15 @@ const Login = () => {
             Log In with Civic
           </button>
         ) : (
-          <p className="text-lg">Waiting for Civic…</p>
+            <AnimatedText
+               text=" Waiting for  Civic...."
+        animation="wave"
+        as="h1"
+              className="text-2xl text-purple-600"
+            />
+          // <AnimatedText>
+          //   <p className="text-2xl text-purple-600">Waiting for Civic…</p>
+          // </AnimatedText>
         )}
         {manualLoginTriggered && error && (
           <p className="text-red-400 mt-4">{error}</p>
