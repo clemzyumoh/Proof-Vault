@@ -11,20 +11,30 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [manualLoginTriggered, setManualLoginTriggered] = useState(false);
   const [loading, setLoading] = useState(false);
- 
-  // useEffect(() => {
-  //   if (user && manualLoginTriggered) {
-  //     //navigate("/");
-  //   }
-  // }, [user, navigate, manualLoginTriggered]);
+    const [hasClickedLogin, setHasClickedLogin] = useState(false);
+
+  // Redirect if already logged in (e.g., refresh or direct visit to /login)
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
+    if (user && manualLoginTriggered) {
+      navigate("/");
+    }
+  }, [user, navigate, manualLoginTriggered]);
 
   const handleLogin = async () => {
-    setManualLoginTriggered(true);
-    setLoading(true);
+   
     try {
-        await signIn();
-         
-           navigate("/");
+      setManualLoginTriggered(true);
+      setHasClickedLogin(true);
+       //setLoading(true);
+      await signIn();
+
+      //navigate("/");
       // navigation will happen in useEffect
     } catch (err) {
       console.error("Login failed:", err);
@@ -51,14 +61,29 @@ const Login = () => {
             <br /> securely and privately
           </p>
         </div>
-        {loading ? (
+        {/* {loading ? (
           <p>Connecting to Civic...</p>
         ) : (
+          // <button
+          //   onClick={handleLogin}
+          //   className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl">
+          //   Log In with Civic
+          // </button>
+          // <button
+          //   onClick={handleLogin}
+          //   className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl"
+          //   disabled={loading}>
+          //   {loading ? "Connecting to Civic..." : "Log In with Civic"}
+          //   </button>
+       */}
+        {!hasClickedLogin ? (
           <button
             onClick={handleLogin}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-xl">
+            className="px-6 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 transition">
             Log In with Civic
           </button>
+        ) : (
+          <p className="text-lg">Waiting for Civic…</p>
         )}
         {manualLoginTriggered && error && (
           <p className="text-red-400 mt-4">{error}</p>
