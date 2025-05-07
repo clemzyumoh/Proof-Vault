@@ -16,7 +16,7 @@ const [error, setError] = useState(null);
   useEffect(() => {
     const fetchDoc = async () => {
       try {
-        const apiUrl = `${import.meta.env.VITE_API_URL}/docs/${id}`;
+        const apiUrl = `${import.meta.env.VITE_API_URL}/api/docs/${id}`;
         const response = await fetch(apiUrl, {
           headers: { "X-Wallet-Address": ethereum.address},
         });
@@ -49,7 +49,7 @@ const [error, setError] = useState(null);
   // };
   const handleDelete = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/docs/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/docs/${id}`, {
         headers: { "X-Wallet-Address": ethereum.address }, // Send wallet address for validation
       });
       navigate("/"); // Redirect to the home page after deletion

@@ -16,7 +16,7 @@ export default function Home() {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/docs`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/docs`, {
           headers: {
             "X-Wallet-Address": ethereum?.address,
           },

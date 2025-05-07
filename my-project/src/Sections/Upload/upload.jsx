@@ -70,7 +70,7 @@ const handleUpload = async (e) => {
     const formData = new FormData();
     formData.append("file", file);
     const ipfsRes = await axios.post(
-      `${import.meta.env.VITE_API_URL}/ipfs/upload`,
+      `${import.meta.env.VITE_API_URL}/api/ipfs/upload`,
       formData,
       {
         headers: {
@@ -92,7 +92,7 @@ const handleUpload = async (e) => {
     };
 console.log("Ethereum Wallet Address to be sent:", ethereum);
     await axios.post(
-      `${import.meta.env.VITE_API_URL}/docs/upload`,
+      `${import.meta.env.VITE_API_URL}/api/docs/upload`,
       docPayload,
       {
         headers: {
